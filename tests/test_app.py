@@ -3,12 +3,12 @@ from unittest.mock import MagicMock, patch
 import sys
 import os
 
-# Add root directory to path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# Add src directory to path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
-import app
-import config
-import metrics
+from ts3_exporter import main as app
+from ts3_exporter import config
+from ts3_exporter import metrics
 
 class TestTeamspeak3MetricService(unittest.TestCase):
 
@@ -18,7 +18,7 @@ class TestTeamspeak3MetricService(unittest.TestCase):
         # We can just ignore previous state or check for existence.
         pass
 
-    @patch('app.ts3.TS3Server')
+    @patch('ts3_exporter.main.ts3.TS3Server')
     def test_collect_metrics(self, mock_ts3_server):
         # Setup mock
         mock_server_instance = MagicMock()
@@ -27,29 +27,32 @@ class TestTeamspeak3MetricService(unittest.TestCase):
         # Mock login success
         mock_server_instance.login.return_value = True
 
-        # Mock serverlist - Use MagicMock for the response object structure
+        # Mock serverlist
         mock_serverlist_resp = MagicMock()
         mock_serverlist_resp.data = [{'virtualserver_id': '1'}]
         mock_server_instance.serverlist.return_value = mock_serverlist_resp
 
-        # Mock serverinfo
-        mock_serverinfo_resp = MagicMock()
-        mock_serverinfo_resp.data = [{
-            'virtualserver_name': 'Test Server',
-            'virtualserver_clientsonline': '10',
-            'virtualserver_uptime': '1000'
-        }]
-        mock_server_instance.serverinfo.return_value = mock_serverinfo_resp
-
-        # Mock clientlist
-        mock_clientlist_resp = MagicMock()
-        mock_clientlist_resp.data = [{
-            'client_nickname': 'User1',
-            'nickname': 'User1',  # Add nickname as well
-            'player_id': '123',
-            'client_type': '0'
-        }]
-        mock_server_instance.clientlist.return_value = mock_clientlist_resp
+        # Mock send_command for serverinfo and clientlist
+        def mock_send_command(cmd, keys=None, opts=None, args=None):
+            resp = MagicMock()
+            if cmd == 'serverinfo':
+                resp.data = [{
+                    'virtualserver_name': 'Test Server',
+                    'virtualserver_clientsonline': '10',
+                    'virtualserver_uptime': '1000'
+                }]
+            elif cmd == 'clientlist':
+                resp.data = [{
+                    'client_nickname': 'User1',
+                    'nickname': 'User1',
+                    'player_id': '123',
+                    'client_type': '0'
+                }]
+            else:
+                resp.data = []
+            return resp
+        
+        mock_server_instance.send_command.side_effect = mock_send_command
 
         # Create config
         server_conf = config.ServerConfig(

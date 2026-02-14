@@ -4,8 +4,8 @@ import ts3
 from prometheus_client import start_http_server
 from concurrent.futures import ThreadPoolExecutor
 
-import config
-import metrics
+from . import config
+from . import metrics
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -141,34 +141,39 @@ def process_server(server_config):
     service = Teamspeak3MetricService(server_config)
     service.collect()
 
-def main():
-    # Load configuration
-    conf = config.load_config()
-
-    # Start Prometheus HTTP server
-    logger.info(f"Starting metrics server on port {conf.metrics_port}")
-    start_http_server(conf.metrics_port)
-
-    logger.info(f"Monitoring {len(conf.servers)} servers with interval {conf.read_interval}s")
-
-    while True:
-        start_time = time.time()
-
-        # Run collection for all servers in parallel
-        with ThreadPoolExecutor(max_workers=max(1, len(conf.servers))) as executor:
-            executor.map(process_server_wrapper, conf.servers)
-
-        elapsed = time.time() - start_time
-        sleep_time = max(0, conf.read_interval - elapsed)
-        if sleep_time > 0:
-            time.sleep(sleep_time)
-
 # Wrapper to avoid pickling issues if any, though not expected with ThreadPoolExecutor
 def process_server_wrapper(server_config):
     try:
         process_server(server_config)
     except Exception as e:
         logger.error(f"Unhandled exception for server {server_config.name}: {e}")
+
+class TeamSpeakExporter:
+    def __init__(self):
+        self.conf = config.load_config()
+
+    def run(self):
+        # Start Prometheus HTTP server
+        logger.info(f"Starting metrics server on port {self.conf.metrics_port}")
+        start_http_server(self.conf.metrics_port)
+
+        logger.info(f"Monitoring {len(self.conf.servers)} servers with interval {self.conf.read_interval}s")
+
+        while True:
+            start_time = time.time()
+
+            # Run collection for all servers in parallel
+            with ThreadPoolExecutor(max_workers=max(1, len(self.conf.servers))) as executor:
+                executor.map(process_server_wrapper, self.conf.servers)
+
+            elapsed = time.time() - start_time
+            sleep_time = max(0, self.conf.read_interval - elapsed)
+            if sleep_time > 0:
+                time.sleep(sleep_time)
+
+def main():
+    exporter = TeamSpeakExporter()
+    exporter.run()
 
 if __name__ == '__main__':
     main()
