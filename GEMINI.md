@@ -14,19 +14,28 @@
 ## 运行与开发
 
 ### 环境准备
-项目使用 `uv` 进行包管理。
+项目使用 `uv` 进行包管理。本地开发建议安装 `uv`：
 ```bash
 # 安装依赖
 uv sync
 ```
 
-### 运行
+### 运行 (推荐)
+默认推荐使用 Docker Compose 运行，它会自动处理依赖并启动服务：
 ```bash
-# 使用 Python 直接运行
-uv run python app.py
+# 复制配置文件
+cp config.yaml.example config.yaml
 
-# 或者通过 Docker 运行
+# 启动服务
 docker-compose up -d
+```
+
+### 本地开发运行
+若需在本地直接运行：
+```bash
+# 设置 PYTHONPATH 并运行
+export PYTHONPATH=$PYTHONPATH:$(pwd)/src
+uv run python -m ts3_exporter.main
 ```
 
 ### 测试
