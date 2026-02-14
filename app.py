@@ -34,7 +34,7 @@ class Teamspeak3MetricService:
     def disconnect(self):
         if self.serverQueryService:
             try:
-                self.serverQueryService.close()
+                self.serverQueryService.disconnect()
             except Exception as e:
                 logger.warning(f"Error disconnecting from {self.server_name}: {e}")
             finally:
@@ -62,7 +62,7 @@ class Teamspeak3MetricService:
 
                 try:
                     self.serverQueryService.use(virtualserver_id)
-                    serverinfoResponse = self.serverQueryService.serverinfo()
+                    serverinfoResponse = self.serverQueryService.send_command('serverinfo')
                     serverinfo = serverinfoResponse.data[0]
                     virtualserver_name = serverinfo.get('virtualserver_name', 'Unknown')
 
@@ -79,10 +79,10 @@ class Teamspeak3MetricService:
                                 pass
 
                     # Update Player Metrics
-                    # clientlist -uid -away -voice -times -groups -info -country -ip -badges
-                    clientlistResponse = self.serverQueryService.clientlist(
-                        uid=True, away=True, voice=True, times=True, groups=True,
-                        info=True, country=True, ip=True, badges=True
+                    # Get detailed client list using options
+                    clientlistResponse = self.serverQueryService.send_command(
+                        'clientlist', 
+                        opts=['uid', 'away', 'voice', 'times', 'groups', 'info', 'country', 'ip', 'badges']
                     )
 
                     players = clientlistResponse.data
