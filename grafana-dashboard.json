@@ -25,7 +25,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aelkijwrrw6iob"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -286,7 +286,7 @@
           "disableTextWrap": false,
           "editorMode": "code",
           "exemplar": false,
-          "expr": "avg(teamspeak_player_online) by (clid, cid, client_nickname, connection_client_ip, client_version, client_away, client_away_message, client_input_muted, client_output_muted, client_lastconnected, client_country)",
+          "expr": "avg(teamspeak_player_online{client_type!=\"1\"}) by (clid, cid, client_nickname, connection_client_ip, client_version, client_away, client_away_message, client_input_muted, client_output_muted, client_lastconnected, client_country)",
           "format": "table",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
@@ -298,7 +298,7 @@
           "useBackend": false
         }
       ],
-      "title": "Online Client",
+      "title": "在线客户端详情",
       "transformations": [
         {
           "id": "filterFieldsByName",
@@ -586,7 +586,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aelkijwrrw6iob"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "teamspeak_virtualserver_clientsonline - teamspeak_virtualserver_queryclientsonline",
       "fieldConfig": {
@@ -648,21 +648,21 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "teamspeak_virtualserver_clientsonline{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"} - teamspeak_virtualserver_queryclientsonline{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}",
+          "expr": "sum(teamspeak_virtualserver_clientsonline{server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\",client_type!=\"1\"})",
           "format": "time_series",
           "instant": false,
           "refId": "A"
         }
       ],
-      "title": "Connected Clients",
+      "title": "连接客户端数",
       "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aelkijwrrw6iob"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Based on teamspeak_virtualserver_maxclients",
       "fieldConfig": {
@@ -724,19 +724,19 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "teamspeak_virtualserver_maxclients{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}",
+          "expr": "teamspeak_virtualserver_maxclients{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}",
           "refId": "A"
         }
       ],
-      "title": "Max clients",
+      "title": "最大客户端数",
       "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aelkijwrrw6iob"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "teamspeak_virtualserver_reserved_slots",
       "fieldConfig": {
@@ -798,19 +798,19 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "teamspeak_virtualserver_reserved_slots{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}",
+          "expr": "teamspeak_virtualserver_reserved_slots{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}",
           "refId": "A"
         }
       ],
-      "title": "Reserved slots",
+      "title": "预留席位",
       "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aelkijwrrw6iob"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Based on teamspeak_virtualserver_channelsonline",
       "fieldConfig": {
@@ -872,19 +872,19 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "teamspeak_virtualserver_channelsonline{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}",
+          "expr": "teamspeak_virtualserver_channelsonline{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}",
           "refId": "A"
         }
       ],
-      "title": "Channels online",
+      "title": "在线频道数",
       "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aelkijwrrw6iob"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "teamspeak_virtualserver_uptime",
       "fieldConfig": {
@@ -947,19 +947,19 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "teamspeak_virtualserver_uptime{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}",
+          "expr": "teamspeak_virtualserver_uptime{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}",
           "refId": "A"
         }
       ],
-      "title": "Uptime",
+      "title": "运行时间",
       "type": "stat"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aelkijwrrw6iob"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Based on teamspeak_virtualserver_clientsonline & teamspeak_virtualserver_queryclientsonline",
       "fieldConfig": {
@@ -1049,20 +1049,20 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "teamspeak_virtualserver_clientsonline{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"} - teamspeak_virtualserver_queryclientsonline{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}",
+          "expr": "sum(teamspeak_virtualserver_clientsonline{server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\",client_type!=\"1\"})",
           "legendFormat": "Connected clients",
           "refId": "A"
         }
       ],
-      "title": "Connected clients",
+      "title": "实时在线人数",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aelkijwrrw6iob"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Based on teamspeak_virtualserver_total_packetloss_total, teamspeak_virtualserver_total_packetloss_speech, teamspeak_virtualserver_total_packetloss_keepalive, teamspeak_virtualserver_total_packetloss_control",
       "fieldConfig": {
@@ -1151,47 +1151,47 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "teamspeak_virtualserver_total_packetloss_total{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}",
+          "expr": "teamspeak_virtualserver_total_packetloss_total{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}",
           "legendFormat": "Total",
           "refId": "A"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "teamspeak_virtualserver_total_packetloss_speech{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}",
+          "expr": "teamspeak_virtualserver_total_packetloss_speech{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}",
           "legendFormat": "Speech",
           "refId": "B"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "teamspeak_virtualserver_total_packetloss_keepalive{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}",
+          "expr": "teamspeak_virtualserver_total_packetloss_keepalive{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}",
           "legendFormat": "Keepalive",
           "refId": "C"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "teamspeak_virtualserver_total_packetloss_control{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}",
+          "expr": "teamspeak_virtualserver_total_packetloss_control{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}",
           "legendFormat": "Control",
           "refId": "D"
         }
       ],
-      "title": "Packet loss",
+      "title": "丢包率",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aelkijwrrw6iob"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Based on teamspeak_virtualserver_total_ping",
       "fieldConfig": {
@@ -1280,20 +1280,20 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "teamspeak_virtualserver_total_ping{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"} ",
+          "expr": "teamspeak_virtualserver_total_ping{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"} ",
           "legendFormat": "Ping",
           "refId": "A"
         }
       ],
-      "title": "Average ping",
+      "title": "平均延迟",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aelkijwrrw6iob"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Based on teamspeak_connection_packets_received_total, teamspeak_connection_packets_received_speech, teamspeak_connection_packets_received_keepalive, teamspeak_connection_packets_received_control, teamspeak_connection_packets_sent_total, teamspeak_connection_packets_sent_speech, teamspeak_connection_packets_sent_keepalive & teamspeak_connection_packets_sent_control",
       "fieldConfig": {
@@ -1382,83 +1382,83 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "irate(teamspeak_connection_packets_received_total{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}[5m]) * 8",
+          "expr": "irate(teamspeak_connection_packets_received_total{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}[5m]) * 8",
           "legendFormat": "Incoming total",
           "refId": "A"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "irate(teamspeak_connection_packets_received_speech{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}[5m]) * 8",
+          "expr": "irate(teamspeak_connection_packets_received_speech{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}[5m]) * 8",
           "legendFormat": "Incoming speech",
           "refId": "B"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "irate(teamspeak_connection_packets_received_keepalive{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}[5m]) * 8",
+          "expr": "irate(teamspeak_connection_packets_received_keepalive{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}[5m]) * 8",
           "legendFormat": "Incoming keepalive",
           "refId": "C"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "irate(teamspeak_connection_packets_received_control{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}[5m]) * 8",
+          "expr": "irate(teamspeak_connection_packets_received_control{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}[5m]) * 8",
           "legendFormat": "Incoming control",
           "refId": "D"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "-irate(teamspeak_connection_packets_sent_total{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}[5m]) * 8",
+          "expr": "-irate(teamspeak_connection_packets_sent_total{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}[5m]) * 8",
           "legendFormat": "Outgoing total",
           "refId": "E"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "-irate(teamspeak_connection_packets_sent_speech{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}[5m]) * 8",
+          "expr": "-irate(teamspeak_connection_packets_sent_speech{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}[5m]) * 8",
           "legendFormat": "Outgoing speech",
           "refId": "F"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "-irate(teamspeak_connection_packets_sent_keepalive{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}[5m]) * 8",
+          "expr": "-irate(teamspeak_connection_packets_sent_keepalive{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}[5m]) * 8",
           "legendFormat": "Outgoing keepalive",
           "refId": "G"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "-irate(teamspeak_connection_packets_sent_control{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}[5m]) * 8",
+          "expr": "-irate(teamspeak_connection_packets_sent_control{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}[5m]) * 8",
           "legendFormat": "Outgoing control",
           "refId": "H"
         }
       ],
-      "title": "Packets",
+      "title": "数据包速率",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aelkijwrrw6iob"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Based on teamspeak_connection_bandwidth_received_last_second_total & teamspeak_connection_bandwidth_sent_last_second_total ",
       "fieldConfig": {
@@ -1547,29 +1547,29 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "teamspeak_connection_bandwidth_received_last_second_total{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"} * 8",
+          "expr": "teamspeak_connection_bandwidth_received_last_second_total{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"} * 8",
           "legendFormat": "Incoming",
           "refId": "A"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "-teamspeak_connection_bandwidth_sent_last_second_total{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"} * 8",
+          "expr": "-teamspeak_connection_bandwidth_sent_last_second_total{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"} * 8",
           "legendFormat": "Outgoing",
           "refId": "B"
         }
       ],
-      "title": "Bandwith last second",
+      "title": "实时带宽 (秒)",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aelkijwrrw6iob"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Based on teamspeak_connection_bandwidth_received_last_minute_total &  teamspeak_connection_bandwidth_sent_last_minute_total",
       "fieldConfig": {
@@ -1658,9 +1658,9 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "teamspeak_connection_bandwidth_received_last_minute_total{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"} * 8",
+          "expr": "teamspeak_connection_bandwidth_received_last_minute_total{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"} * 8",
           "instant": false,
           "intervalFactor": 1,
           "legendFormat": "Incoming",
@@ -1669,21 +1669,21 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "-teamspeak_connection_bandwidth_sent_last_minute_total{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"} * 8",
+          "expr": "-teamspeak_connection_bandwidth_sent_last_minute_total{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"} * 8",
           "instant": false,
           "legendFormat": "Outgoing",
           "refId": "B"
         }
       ],
-      "title": "Bandwidth last minute",
+      "title": "实时带宽 (分)",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aelkijwrrw6iob"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Based on teamspeak_connection_bytes_received_total, teamspeak_connection_bytes_received_speech, teamspeak_connection_bytes_received_keepalive, teamspeak_connection_bytes_received_control, teamspeak_connection_bytes_sent_total, teamspeak_connection_bytes_sent_speech, teamspeak_connection_bytes_sent_keepalive, teamspeak_connection_bytes_sent_control",
       "fieldConfig": {
@@ -1772,83 +1772,83 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "irate(teamspeak_connection_bytes_received_total{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}[5m]) * 8",
+          "expr": "irate(teamspeak_connection_bytes_received_total{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}[5m]) * 8",
           "legendFormat": "Incoming total",
           "refId": "A"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "irate(teamspeak_connection_bytes_received_speech{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}[5m]) * 8",
+          "expr": "irate(teamspeak_connection_bytes_received_speech{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}[5m]) * 8",
           "legendFormat": "Incoming speech",
           "refId": "B"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "irate(teamspeak_connection_bytes_received_keepalive{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}[5m]) * 8",
+          "expr": "irate(teamspeak_connection_bytes_received_keepalive{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}[5m]) * 8",
           "legendFormat": "Incoming keepalive",
           "refId": "C"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "irate(teamspeak_connection_bytes_received_control{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}[5m]) * 8",
+          "expr": "irate(teamspeak_connection_bytes_received_control{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}[5m]) * 8",
           "legendFormat": "Incoming control",
           "refId": "D"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "-irate(teamspeak_connection_bytes_sent_total{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}[5m]) * 8",
+          "expr": "-irate(teamspeak_connection_bytes_sent_total{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}[5m]) * 8",
           "legendFormat": "Outgoing total",
           "refId": "E"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "-irate(teamspeak_connection_bytes_sent_speech{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}[5m]) * 8",
+          "expr": "-irate(teamspeak_connection_bytes_sent_speech{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}[5m]) * 8",
           "legendFormat": "Outgoing speech",
           "refId": "F"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "-irate(teamspeak_connection_bytes_sent_keepalive{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}[5m]) * 8",
+          "expr": "-irate(teamspeak_connection_bytes_sent_keepalive{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}[5m]) * 8",
           "legendFormat": "Outgoing keepalive",
           "refId": "G"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "-irate(teamspeak_connection_bytes_sent_control{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}[5m]) * 8",
+          "expr": "-irate(teamspeak_connection_bytes_sent_control{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}[5m]) * 8",
           "legendFormat": "Outgoing control",
           "refId": "H"
         }
       ],
-      "title": "Connection bytes",
+      "title": "连接流量详情",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "aelkijwrrw6iob"
+        "uid": "${DS_PROMETHEUS}"
       },
       "description": "Based on teamspeak_virtualserver_total_bytes_uploaded & teamspeak_virtualserver_total_bytes_downloaded",
       "fieldConfig": {
@@ -1937,23 +1937,23 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "irate(teamspeak_virtualserver_total_bytes_uploaded{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}[5m])",
+          "expr": "irate(teamspeak_virtualserver_total_bytes_uploaded{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}[5m])",
           "legendFormat": "Uploaded",
           "refId": "A"
         },
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "aelkijwrrw6iob"
+            "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "-irate(teamspeak_virtualserver_total_bytes_downloaded{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"}[5m])",
+          "expr": "-irate(teamspeak_virtualserver_total_bytes_downloaded{server_name=~\"$server_name\",server_name=~\"$server_name\",virtualserver_name=~\"$virtualserver\"}[5m])",
           "legendFormat": "Downloaded",
           "refId": "B"
         }
       ],
-      "title": "Upload / Download",
+      "title": "上传 / 下载速率",
       "type": "timeseries"
     }
   ],
@@ -1968,11 +1968,12 @@
     "list": [
       {
         "current": {
-          "text": "prometheus",
-          "value": "aelkijwrrw6iob"
+          "text": "Prometheus",
+          "value": "ffd8135ozedq8b"
         },
+        "hide": 0,
         "includeAll": false,
-        "label": "Datasource",
+        "label": "数据源",
         "name": "DS_PROMETHEUS",
         "options": [],
         "query": "prometheus",
@@ -1981,70 +1982,41 @@
         "type": "datasource"
       },
       {
-        "current": {
-          "text": "teamspeak-server",
-          "value": "teamspeak-server"
+        "allValue": ".*",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "ffd8135ozedq8b"
         },
-        "datasource": "aelkijwrrw6iob",
-        "definition": "label_values(teamspeak_virtualserver_uptime, job)",
-        "includeAll": false,
-        "label": "Job",
-        "name": "job",
+        "definition": "label_values(teamspeak_virtualserver_clientsonline, server_name)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "服务器名称",
+        "multi": true,
+        "name": "server_name",
         "options": [],
-        "query": "label_values(teamspeak_virtualserver_uptime, job)",
+        "query": "label_values(teamspeak_virtualserver_clientsonline, server_name)",
         "refresh": 1,
         "regex": "",
         "sort": 1,
         "type": "query"
       },
       {
-        "current": {
-          "text": "100.67.109.40:8000",
-          "value": "100.67.109.40:8000"
+        "allValue": ".*",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "ffd8135ozedq8b"
         },
-        "datasource": "$DS_PROMETHEUS",
-        "definition": "label_values(teamspeak_virtualserver_uptime{job=\"$job\"}, instance)",
-        "includeAll": false,
-        "label": "Instance:",
-        "name": "instance",
-        "options": [],
-        "query": "label_values(teamspeak_virtualserver_uptime{job=\"$job\"}, instance)",
-        "refresh": 1,
-        "regex": "",
-        "sort": 1,
-        "type": "query"
-      },
-      {
-        "current": {
-          "text": "VIOLET_TEAMSPEAK_SERVER",
-          "value": "VIOLET_TEAMSPEAK_SERVER"
-        },
-        "datasource": "$DS_PROMETHEUS",
-        "definition": "label_values(teamspeak_virtualserver_uptime{instance=\"$instance\",job=\"$job\"}, virtualserver_name)",
-        "includeAll": false,
-        "label": "Virtual Server:",
+        "definition": "label_values(teamspeak_virtualserver_clientsonline{server_name=~\"$server_name\"}, virtualserver_name)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "虚拟服务器",
+        "multi": true,
         "name": "virtualserver",
         "options": [],
-        "query": "label_values(teamspeak_virtualserver_uptime{instance=\"$instance\",job=\"$job\"}, virtualserver_name)",
+        "query": "label_values(teamspeak_virtualserver_clientsonline{server_name=~\"$server_name\"}, virtualserver_name)",
         "refresh": 1,
         "regex": "",
         "sort": 1,
-        "type": "query"
-      },
-      {
-        "current": {
-          "text": "teamspeak_virtualserver_maxclients{instance=\"100.67.109.40:8000\",job=\"teamspeak-server\",virtualserver_name=\"VIOLET_TEAMSPEAK_SERVER\"} 32 1749324378000",
-          "value": "teamspeak_virtualserver_maxclients{instance=\"100.67.109.40:8000\",job=\"teamspeak-server\",virtualserver_name=\"VIOLET_TEAMSPEAK_SERVER\"} 32 1749324378000"
-        },
-        "datasource": "$DS_PROMETHEUS",
-        "definition": "query_result(teamspeak_virtualserver_maxclients{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"})",
-        "hide": 2,
-        "includeAll": false,
-        "name": "maxclients",
-        "options": [],
-        "query": "query_result(teamspeak_virtualserver_maxclients{instance=\"$instance\",job=\"$job\",virtualserver_name=\"$virtualserver\"})",
-        "refresh": 1,
-        "regex": "",
         "type": "query"
       }
     ]
@@ -2055,7 +2027,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Teamspeak",
+  "title": "TeamSpeak 3 监控面板",
   "uid": "o7G5WqUZk",
   "version": 17
 }
