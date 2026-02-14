@@ -1,13 +1,20 @@
 services:
-  app:
+  teamspeak-prometheus:
     build: .
     container_name: teamspeak-prometheus
-    ports:
-      - "8000:8000"
+    restart: always
     volumes:
       - ./config.yaml:/app/config.yaml
-    # Environment variables can still be used for single server configuration if config.yaml is missing
-    # environment:
-    #   - TEAMSPEAK_HOST=10.115.15.25
-    #   - TEAMSPEAK_PASSWORD=Dd112211
+    ports:
+      - "8001:8000"
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
     restart: always
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    depends_on:
+      - teamspeak-prometheus
