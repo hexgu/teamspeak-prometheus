@@ -13,6 +13,9 @@ dependencies = [
     "pyyaml>=6.0.3",
 ]
 
+[project.scripts]
+ts3-exporter = "ts3_exporter.main:main"
+
 [project.urls]
 Homepage = "https://github.com/hexgu/teamspeak-prometheus/"
 Repository = "https://github.com/hexgu/teamspeak-prometheus/"
