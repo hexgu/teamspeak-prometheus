@@ -1,0 +1,17 @@
+# Multiple Server Configuration
+servers:
+  - name: "Main Server"
+    host: "10.115.15.25"
+    port: 10011
+    username: "serveradmin"
+    password: "your_password"
+
+  # - name: "Another Server"
+  #   host: "another_host"
+  #   port: 10011
+  #   username: "serveradmin"
+  #   password: "your_password"
+
+# Global settings
+metrics_port: 8000
+read_interval: 60
