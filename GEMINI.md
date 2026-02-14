@@ -27,7 +27,7 @@ uv sync
 cp config.yaml.example config.yaml
 
 # 启动服务
-docker-compose up -d
+docker compose up -d
 ```
 
 ### 本地开发运行
