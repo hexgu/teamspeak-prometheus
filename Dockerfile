@@ -28,4 +28,4 @@ ENV PATH="/app/.venv/bin:$PATH"
 # Reset the entrypoint, don't invoke `uv`
 ENTRYPOINT []
 
-CMD ["python", "app.py"]
+CMD ["python", "-m", "ts3_exporter.main"]
