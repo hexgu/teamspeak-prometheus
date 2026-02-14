@@ -76,6 +76,12 @@ uv run python app.py
 
 - **仙姑本咕**
 
+## 🙏 鸣谢
+
+本项目参考或衍生自以下优秀开源项目：
+- [xkdvSrPD/teamspeak-prometheus](https://github.com/xkdvSrPD/teamspeak-prometheus)
+- [TilmannF/teamspeak-prometheus](https://github.com/TilmannF/teamspeak-prometheus)
+
 ## 📄 开源协议
 
 本项目采用 MIT 协议开源，详情请参阅 [LICENSE.md](LICENSE.md)。
