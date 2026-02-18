@@ -1,32 +1,31 @@
-FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
-
-# Install git for git dependencies
-RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+# Build stage
+FROM golang:1.23-alpine AS builder
 
 WORKDIR /app
 
-# Enable bytecode compilation
-ENV UV_COMPILE_BYTECODE=1
-# Copy from the cache instead of linking since it's a mounted volume
-ENV UV_LINK_MODE=copy
+# Copy go mod and sum files
+COPY go.mod go.sum ./
+RUN go mod download
 
-# Install the project's dependencies using the lockfile and settings
-RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=uv.lock,target=uv.lock \
-    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
-    uv sync --frozen --no-install-project --no-dev
+# Copy source code
+COPY . .
 
-# Then, add the rest of the project source code and install it
-ADD . /app
+# Build the binary
+RUN CGO_ENABLED=0 GOOS=linux go build -o ts3-exporter cmd/ts3-exporter/main.go
 
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --frozen --no-dev
+# Final stage
+FROM gcr.io/distroless/static-debian12
 
-# Place executables in the environment at the front of the path
-ENV PATH="/app/.venv/bin:$PATH"
-ENV PYTHONPATH="/app/src:$PYTHONPATH"
+WORKDIR /
 
-# Reset the entrypoint, don't invoke `uv`
-ENTRYPOINT []
+# Copy the binary from the builder stage
+COPY --from=builder /app/ts3-exporter /ts3-exporter
 
-CMD ["python", "-m", "ts3_exporter.main"]
+# Copy example config (optional, but good for reference/mounting)
+COPY --from=builder /app/legacy_python/config.yaml.example /config.yaml.example
+
+# Expose the port
+EXPOSE 8000
+
+# Command to run
+CMD ["/ts3-exporter"]

@@ -1,3 +1,9 @@
+# Go
+ts3-exporter
+*.exe
+*.test
+*.prof
+
 # Python
 __pycache__/
 *.py[cod]
